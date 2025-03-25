@@ -25,12 +25,14 @@ export function LoginForm({
 
     const formData = new FormData(event.currentTarget);
     const result = await signIn(formData);
+    setLoading(false);
     if (result?.error) {
       setError(result?.error);
     } else if (result?.success) {
       router.push("/");
     }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
@@ -65,9 +67,17 @@ export function LoginForm({
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Giriş Yap
+
+              {/* Show loading spinner while submitting */}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Yükleniyor..." : "Giriş Yap"}
               </Button>
+
+              {/* Show error message if there's an error */}
+              {error && (
+                <div className="text-red-500 text-center mt-2">{error}</div>
+              )}
+
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   ya da
